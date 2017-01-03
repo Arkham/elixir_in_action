@@ -7,7 +7,7 @@ defmodule Todo.Server do
   end
 
   def whereis(name) do
-    Todo.ProcessRegistry.whereis_name({Todo.Server, name})
+    :gproc.whereis_name({:n, :l, {Todo.Server, name}})
   end
 
   def add_entry(name, entry) do
@@ -33,6 +33,6 @@ defmodule Todo.Server do
   end
 
   defp via_tuple(name) do
-    {:via, Todo.ProcessRegistry, {Todo.Server, name}}
+    {:via, :gproc, {:n, :l, {Todo.Server, name}}}
   end
 end

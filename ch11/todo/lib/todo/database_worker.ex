@@ -39,6 +39,6 @@ defmodule Todo.DatabaseWorker do
   defp file_name(db_folder, key), do: "#{db_folder}/#{key}"
 
   defp via_tuple(worker_id) do
-    {:via, Todo.ProcessRegistry, {Todo.DatabaseWorker, worker_id}}
+    {:via, :gproc, {:n, :l, {Todo.DatabaseWorker, worker_id}}}
   end
 end
