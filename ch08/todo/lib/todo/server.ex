@@ -3,15 +3,19 @@ defmodule Todo.Server do
 
   def start_link(name) do
     IO.puts "Starting Todo.Server for #{name}"
-    GenServer.start_link(__MODULE__, name)
+    GenServer.start_link(__MODULE__, name, name: via_tuple(name))
   end
 
-  def add_entry(pid, entry) do
-    GenServer.cast(pid, {:add_entry, entry})
+  def whereis(name) do
+    Todo.ProcessRegistry.whereis_name({Todo.Server, name})
   end
 
-  def entries(pid, date) do
-    GenServer.call(pid, {:entries, date})
+  def add_entry(name, entry) do
+    GenServer.cast(via_tuple(name), {:add_entry, entry})
+  end
+
+  def entries(name, date) do
+    GenServer.call(via_tuple(name), {:entries, date})
   end
 
   def init(name) do
@@ -26,5 +30,9 @@ defmodule Todo.Server do
 
   def handle_call({:entries, date}, _from, {_name, todo_list} = state) do
     {:reply, Todo.List.entries(todo_list, date), state}
+  end
+
+  defp via_tuple(name) do
+    {:via, Todo.ProcessRegistry, {Todo.Server, name}}
   end
 end
