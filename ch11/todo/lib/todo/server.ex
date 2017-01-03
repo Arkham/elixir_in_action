@@ -10,12 +10,12 @@ defmodule Todo.Server do
     :gproc.whereis_name({:n, :l, {Todo.Server, name}})
   end
 
-  def add_entry(name, entry) do
-    GenServer.cast(via_tuple(name), {:add_entry, entry})
+  def add_entry(todo_server, entry) do
+    GenServer.cast(todo_server, {:add_entry, entry})
   end
 
-  def entries(name, date) do
-    GenServer.call(via_tuple(name), {:entries, date})
+  def entries(todo_server, date) do
+    GenServer.call(todo_server, {:entries, date})
   end
 
   def init(name) do
